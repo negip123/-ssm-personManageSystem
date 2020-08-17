@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>用户管理</title>
+<link href="../css/daohang.css" rel="stylesheet" type="text/css"/>
+<link href="../css/table.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script><script language="javascript">
+	function newDept(){
+		window.navigate("createUser.html");
+	}
+	$(function(){
+		//跳转至新增页面
+		$("#newUse").click(function(){
+			window.location.href="createUser";
+		});
+	//删除
+	$("#deleteMessage").click(function(){
+	// 批量删除：先获取需要删除的id
+	var ids =[];
+	$("[name=chkselect]:checked").each(function(index,item){
+		// jQuery的each遍历时index代表是索引 ，item是DOM对象-通常情况下，需要将DOM对象转换成jQuery对象
+		//alert();
+		ids.push($(item).parent().next().text());
+	})
+	// 批量删除： 确认是否删除
+	if (!confirm("你真的想删除选中的信息：" + ids + "，请确认？")) {
+		return;
+	}
+	// 批量删除：请求删除
+	$.ajax({
+		url: "delete",
+		type: "POST",
+		data: {ids: ids}, // 每一个表单元素必须有name属性
+		success: function(rb){
+			if(rb.code==200){
+				// 成功:跳转至显示所有部门信息页面
+				window.location.href = "managerMessage"
+			}else{
+				// 失败了
+				alert(rb.message)
+			}
+		}				
+	});
+}); 
+});
+</script>
+<script language="javascript" src="../js/selectall.js"></script>
+</head>
+
+<body>
+<p class="daohang">当前位置：
+<a href="#">首页</a><
+<font>用户管理</font><br/>
+</p>
+
+<fieldset>
+<legend>查询条件</legend>
+<form action="selectbylike" method="get" name="form1">
+	<table>
+		<tr >
+			<td>编号</td>
+			<td><input name="id" type="text"></td>
+			<td>qq</td>
+			<td><input  name="qq" type="text"></td>
+			<td><input type="submit" value="查询" name="sss"></td>
+		</tr>
+	</table>
+</form>
+</fieldset>
+<fieldset>
+<legend>用户信息</legend>
+<form name="form2">
+<table width="1022" cellspacing="0" class="tabs">
+	<!-- <tr>
+		<td colspan="10" align="left"><input id="newUse" type="button" value="新建用户" ></td>
+	</tr> -->
+	<tr align="center">
+	  <td width="20"><input type="checkbox" name="selectAll"></td>
+		<th width="50">编号</th>
+		<th width="100">qq</th>
+		<th width="500">留言</th>
+		<th width="130">留言日期</th>
+	</tr>
+	<tr align="center" th:each="mess:${print.data}">
+		<td><input name="chkselect" type="checkbox"></td>
+		<td th:text="${mess.id}">10</td>
+		<td th:text="${mess.qq}">订单</td>
+		<td th:text="${mess.text}">你好</td>
+		<td th:text="${#dates.format(mess.date,'yyyy年MM月dd日')}">2020年8月24日</td>
+		<td>
+			<a th:href="|updateMessage?id=${mess.id}|">修改</a>
+		</td>
+	</tr>
+	<tr>
+	  <td colspan="6" align="left">
+	  <input type="button" value="全选" onClick="selectall();">|<input type="button" value="反选" onClick="opposite();">|<input type="button" value="全不选" onClick="selectf();">
+	  </td>
+	  <td colspan="4" align="right">
+	  <input type="button" value="删除选中的部门" id="deleteMessage">
+	  </td>
+    </tr>
+</table>
+</form>
+</fieldset>
+</body>
+</html>

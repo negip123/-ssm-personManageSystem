@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.print.dao.NoticeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.neuedu.print.model.Notice">
+		<constructor>
+			<idArg column="id" javaType="java.lang.Integer"
+				jdbcType="INTEGER" />
+			<arg column="noticetext" javaType="java.lang.String"
+				jdbcType="VARCHAR" />
+			<arg column="noticedate" javaType="java.util.Date"
+				jdbcType="DATE" />
+			<arg column="remark" javaType="java.lang.String"
+				jdbcType="VARCHAR" />
+		</constructor>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, noticetext, noticedate, remark
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from notice
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 查询所有部门信息 -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from notice
+		order by id asc
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from notice
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<delete id="batchDelete" parameterType="java.lang.Integer"
+		flushCache="true">
+		delete from notice
+		where id in
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+
+	<insert id="insert"
+		parameterType="com.neuedu.print.model.Notice">
+		insert into notice (id, noticetext, noticedate,
+		remark)
+		values (#{id,jdbcType=INTEGER}, #{noticetext,jdbcType=VARCHAR},
+		#{noticedate,jdbcType=DATE},
+		#{remark,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.neuedu.print.model.Notice">
+		insert into notice
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="noticetext != null">
+				noticetext,
+			</if>
+			<if test="noticedate != null">
+				noticedate,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="noticetext != null">
+				#{noticetext,jdbcType=VARCHAR},
+			</if>
+			<if test="noticedate != null">
+				#{noticedate,jdbcType=DATE},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.neuedu.print.model.Notice">
+		update notice
+		<set>
+			<if test="noticetext != null">
+				noticetext = #{noticetext,jdbcType=VARCHAR},
+			</if>
+			<if test="noticedate != null">
+				noticedate = #{noticedate,jdbcType=DATE},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.neuedu.print.model.Notice">
+		update notice
+		set noticetext = #{noticetext,jdbcType=VARCHAR},
+		noticedate = #{noticedate,jdbcType=DATE},
+		remark = #{remark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

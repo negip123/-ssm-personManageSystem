@@ -1,0 +1,63 @@
+html{
+	min-height:570px;
+}
+body{
+	margin:0;
+	padding:9px;
+	color:#333;
+	font-size:13px;
+	min-height:570px;
+	background:#fff;
+}
+A:link, A:visited{
+	color:#163d67;
+	text-decoration:none;
+}
+A:hover{
+	color:#3f6389;
+}
+fieldset{
+	margin:0 0 10px;
+	padding:10px;
+	border:#9cc5e5 1px solid
+}
+legend{
+	color:#3796ce;
+	font-weight:bold;
+	margin:0 15px 10px;
+	padding:0 8px;
+}
+.btn01{
+	background:url(../images/btn01.gif);
+	color:#163d67;
+	width:51px;
+	height:27px;
+	border:none 0;
+}
+#list01{
+	border:solid 1px #beddf6;
+	color:#3f6389;
+}
+#list01 th{
+	background:#c5f1fa;
+	border-top:solid 3px #9cc5e5;
+}
+#list01 td{
+	border-top:solid 1px #beddf6;
+}
+.page{
+	text-align:right;
+	color:#333;
+}
+.page strong, .page span{
+	color:#f00;	
+}
+.page a:link, .page a:visited{
+	color:#3f6389;
+}
+.page a:hover{
+	color:#f30;
+}
+.input{
+	width:50px;
+}

@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>岗位管理</title>
+<link href="../css/daohang.css" rel="stylesheet" type="text/css"/>
+<link href="../css/table.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+<script language="javascript">
+	function newDept(){
+		window.navigate("createPost.html");
+		}
+	$(function(){
+		//跳转至部门新增页面
+		$("#newDept").click(function(){
+			window.location.href="createPost";
+		});
+		//删除
+	    $("#deleteDept").click(function(){
+			// 批量删除：先获取需要删除的id
+			var ids =[];
+			$("[name=chkselect]:checked").each(function(index,item){
+				// jQuery的each遍历时index代表是索引 ，item是DOM对象-->通常情况下，需要将DOM对象转换成jQuery对象
+				//alert();
+				ids.push($(item).parent().next().text());
+			})
+			// 批量删除： 确认是否删除
+			if (!confirm("你真的想删除选中的部门信息：" + ids + "，请确认？")) {
+				return;
+			}
+			// 批量删除：请求删除
+			$.ajax({
+				url: "delete",
+				type: "POST",
+				data: {ids: ids}, // 每一个表单元素必须有name属性
+				success: function(rb){
+					if(rb.code==200){
+						// 成功:跳转至显示所有部门信息页面
+						window.location.href = "managerPost"
+					}else{
+						// 失败了
+						alert(rb.message)
+					}
+				}				
+			});
+		});
+	});
+</script>
+<script language="javascript" src="../js/selectall.js"></script>
+</head>
+
+<body>
+<p class="daohang">当前位置：
+<a href="#">首页</a><
+<font>岗位管理</font><br/>
+</p>
+
+<fieldset>
+<legend>查询条件</legend>
+<form action="selectbylike" method="get" name="form1">
+			<table>
+				<tr>
+					<td>岗位编号</td>
+					<td><input name="id" type="text"></td>
+					<td>岗位名称</td>
+					<td><input name="name" type="text"></td>
+					<td>类型</td>
+					<td><select name="type">
+							<option selected="selected" value=""></option>
+							<option value="管理">管理</option>
+							<option value="技术">技术</option>
+							<option value="市场">市场</option>
+							<option value="营销">营销</option>
+					</select></td>
+					<td><input type="submit" value="查询" name="sss"></td>
+				</tr>
+			</table>
+		</form>
+	</fieldset>
+	
+<fieldset>
+<legend>岗位信息</legend>
+<form name="form2">
+<table cellspacing="0" class="tabs" width="1022">
+	<tr>
+		<td align="left" colspan="6"><input id = "newDept" type="button" value="新建岗位"></td>
+	</tr>
+	<tr align="center">
+	  <th width="125"><input type="checkbox" name="selectAll"></th>
+		<th width="154">编号</th>
+		<th width="174">名称</th>
+		<th width="214">类型</th>
+		<th width="142">岗位编制</th>
+		<th width="193">操作</th>
+	</tr>
+	<tr align="center" th:each="dept:${myoffice.data}">
+		<td><input name="chkselect" type="checkbox"></td>
+		<td th:text="${dept.id}">100010</td>
+		<td th:text="${dept.name}">管理</td>
+		<td th:text="${dept.type}">岗位</td>
+		<td th:text="${dept.number}">20</td>
+		
+		<td>
+			<a th:href="|updataPost?id=${dept.id}|">修改</a>
+			<a href="employeesPost.html">岗位下员工查询</a>		</td>
+	</tr>
+	<tr >
+	  <td colspan="3" align="left">
+	  <input type="button" value="全选" onClick="selectall();">|
+	  <input type="button" value="反选" onClick="opposite();">|
+	  <input type="button" value="全不选" onClick="selectf();">
+	  </td>
+	  <td  colspan="4" align="right"><input id="deleteDept" type="button" value="删除选中的岗位" >	  
+	  </td>
+    </tr>
+</table>
+</form>
+</fieldset>
+</body>
+</html>

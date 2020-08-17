@@ -1,0 +1,84 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>岗位管理</title>
+<link href="../css/daohang.css" rel="stylesheet" type="text/css"/>
+<link href="../css/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.js"></script>
+<style>
+table tr td p{
+	color:#FF0000;
+}
+</style>
+<script type="text/javascript">
+	$(function() {
+		$("form").submit(function(){
+			// 数据合法性，暂时未验证
+			// ajax提交新增
+			$.ajax({
+				url: "update",
+				type: "POST",
+				data: $("form").serialize(),
+				success: function(rb){
+					if(rb.code==200){
+						// 成功:跳转至显示所有岗位信息页面
+						alert(rb.message)
+						window.location.href = "managerPost"
+					}else{
+						// 失败了
+						alert(rb.message)
+					}
+				}				
+			});
+			return false;//阻止表单提交
+		});
+	});
+</script>
+
+</head>
+<body>
+<p class="daohang">当前位置：
+<a href="#">首页</a><
+<a href="managerPost.html">岗位管理</a><
+<font>修改岗位信息</font><br/>
+</p>
+<fieldset>
+<legend>部门信息</legend>
+<form>
+<table>
+				<tr>
+					<td>编号</td>
+					<td><input id="id" name="id" th:value="${rd.data.id}" readonly="readonly"
+						type="text" value="100010" ></td>
+				</tr>
+				<tr>
+					<td>名称</td>
+					<td><input id="name" name="name" th:value="${rd.data.name}" type="text"></td>
+				</tr>
+				<tr>
+					<td>岗位类型</td>
+					<td><select id="type" name="type" >
+							<option  value=""></option>
+							<option th:selected="${rd.data.type} eq ''" value=""></option>
+							<option th:selected="${rd.data.type} eq '技术'" value="技术">技术</option>
+							<option th:selected="${rd.data.type} eq '营销'" value="营销">营销</option>
+							<option th:selected="${rd.data.type} eq '市场'" value="市场">市场</option>
+							<option th:selected="${rd.data.type} eq '管理'" value="管理">管理</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>岗位编制</td>
+					<td><input id="number" name="number" th:value="${rd.data.number}" type="text"></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="submit" value="修改">
+						<input type="button" value="取消">
+					</td>
+				</tr>
+</table>
+</fieldset>
+</form>
+</body>
+</html>

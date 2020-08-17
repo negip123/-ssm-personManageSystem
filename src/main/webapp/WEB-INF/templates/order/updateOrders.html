@@ -1,0 +1,120 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>用户管理</title>
+<link href="../css/daohang.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/datepicker-zh-CN.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
+		$("#paytime").datepicker({
+			//添加日期选择功能
+			numberOfMonths:1,//显示几个月
+			showButtonPanel:true,//是否显示按钮面板
+			dateFormat: 'yy-mm-dd',//日期格式
+			clearText:"清除",//清除日期的按钮名称
+			closeText:"关闭",//关闭选择框的按钮名称
+			yearSuffix: '年', //年的后缀
+			showMonthAfterYear:true,//是否把月放在年的后面
+			defaultDate:new Date(),//默认日期
+			minDate:'1900-1-1',//最小日期
+			maxDate:'2050-12-31',//最大日期
+			monthNames: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+			dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],
+			dayNamesMin: ['日','一','二','三','四','五','六'],
+			onSelect: function(selectedDate) {//选择日期后执行的操作
+				$("#paytime").val(selectedDate);
+			}
+		});
+		// 提交修改
+		$("form").submit(function(){
+			// 数据合法性，暂时未验证
+			// ajax提交新增
+			$.ajax({
+				url: "update",
+				type: "POST",
+				data: $("form").serialize(), // 每一个表单元素必须有name属性
+				success: function(rb){
+					if(rb.code==200){
+						// 成功:跳转至显示所有用户信息页面
+						window.location.href = "managerOrders"
+					}else{
+						// 失败了
+						alert(rb.message)
+					}
+				}				
+			});
+			return false;//阻止表单提交
+		});
+	});
+</script>
+</head>
+<body>
+	<p class="daohang">
+		当前位置： <a href="#">首页</a>< <a href="managerOrders.html">用户管理</a><
+		<font>修改用户信息</font><br />
+	</p>
+	<fieldset>
+		<legend>用户信息</legend>
+		<form >
+			<table>
+				<tr>
+					<td>编号</td>
+					<td><input id="id" name="id" th:value="${rd.data.id}" readonly="readonly"
+						type="text" value="1000"></td>
+				</tr>
+				<tr>
+					<td>订单号</td>
+					<td><input id="orderno" name="orderno" th:value="${rd.data.orderno}" type="text" value="订单号"></td>
+				</tr>
+				<tr>
+					<td>支付日期</td>
+					<td><input id="paytime" name="paytime"  th:value="${#dates.format(rd.data.paytime,'yyyy-MM-dd')}"  type="text" value="2020-8-24"
+						onClick="fPopCalendar(event,this,this)" onFocus="this.select()"
+						readonly="readonly"></td>
+				</tr>
+				<tr>
+					<td>支付金额</td>
+					<td><input id="paymoney" name="paymoney"  th:value="${rd.data.paymoney}" type="text" value="支付金额"></td>
+				</tr>
+				<tr>
+					<td>支付状态</td>
+					<td><select id="paystate" name="paystate" >
+							<option  value=""></option>
+							<option th:selected="${rd.data.paystate} eq '0'" value="0">0</option>
+							<option th:selected="${rd.data.paystate} eq '1'" value="1">1</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>收货地址</td>
+					<td><input id="receiveaddress" name="receiveaddress"  th:value="${rd.data.receiveaddress}" type="text"
+						value="收货地址"></td>
+				</tr>
+				
+				<tr>
+					<td>收货人名</td>
+					<td><input  id="receivername" name="receivername"  th:text="${rd.data.receivername}"type="text"
+						value="收货人名"></td>
+				</tr>
+				
+				<tr>
+					<td>收货电话</td>
+					<td><input id="receiverphone" name="receiverphone"  th:value="${rd.data.receiverphone}" type="text" value="收货电话"></td>
+				</tr>
+				<tr>
+					<td>备注</td>
+					<td><textarea id="remark" name="remark"  th:text="${rd.data.remark}"></textarea></td>
+				</tr>
+				
+				<tr>
+					<td colspan="2" align="center"><input type="submit" value="修改">
+						<input type="button" value="取消"></td>
+				</tr>
+			</table>
+		</form>
+	</fieldset>
+</body>
+</html>

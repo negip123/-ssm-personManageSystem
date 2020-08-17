@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.print.dao.OrdersMapper">
+  <resultMap id="BaseResultMap" type="com.neuedu.print.model.Orders">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="orderno" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="paytime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="paymoney" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="paystate" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="receiveaddress" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="receivername" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="receiverphone" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orderno, paytime, paymoney, paystate, receiveaddress, receivername, receiverphone, 
+    remark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+    <!-- 查询所有订单信息 -->
+  <select id="selectAll"   resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from orders
+    order by id asc
+  </select>
+	<!--   带参查询 -->
+  <select id="selectByLike"  resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from orders
+    where 1=1 
+    <if test="id != null">
+    	and  id like concat('%',#{id},'%')
+    </if>
+    <if test="orderno != null">
+    	and  orderno like concat('%',#{orderno},'%')
+    </if>
+    order by id asc
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="batchDelete" parameterType="java.lang.Integer" flushCache="true">
+  	delete from orders 	
+    where id in    
+    <foreach item="item"  collection="array" open="(" separator="," close=")">   
+    	#{item}
+    </foreach>
+</delete>
+  
+  
+  
+  <insert id="insert" parameterType="com.neuedu.print.model.Orders">
+    insert into orders (id, orderno, paytime, 
+      paymoney, paystate, receiveaddress, 
+      receivername, receiverphone, remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderno,jdbcType=INTEGER}, #{paytime,jdbcType=DATE}, 
+      #{paymoney,jdbcType=INTEGER}, #{paystate,jdbcType=INTEGER}, #{receiveaddress,jdbcType=VARCHAR}, 
+      #{receivername,jdbcType=VARCHAR}, #{receiverphone,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.neuedu.print.model.Orders">
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderno != null">
+        orderno,
+      </if>
+      <if test="paytime != null">
+        paytime,
+      </if>
+      <if test="paymoney != null">
+        paymoney,
+      </if>
+      <if test="paystate != null">
+        paystate,
+      </if>
+      <if test="receiveaddress != null">
+        receiveaddress,
+      </if>
+      <if test="receivername != null">
+        receivername,
+      </if>
+      <if test="receiverphone != null">
+        receiverphone,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderno != null">
+        #{orderno,jdbcType=INTEGER},
+      </if>
+      <if test="paytime != null">
+        #{paytime,jdbcType=DATE},
+      </if>
+      <if test="paymoney != null">
+        #{paymoney,jdbcType=INTEGER},
+      </if>
+      <if test="paystate != null">
+        #{paystate,jdbcType=INTEGER},
+      </if>
+      <if test="receiveaddress != null">
+        #{receiveaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="receivername != null">
+        #{receivername,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverphone != null">
+        #{receiverphone,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neuedu.print.model.Orders">
+    update orders
+    <set>
+      <if test="orderno != null">
+        orderno = #{orderno,jdbcType=INTEGER},
+      </if>
+      <if test="paytime != null">
+        paytime = #{paytime,jdbcType=DATE},
+      </if>
+      <if test="paymoney != null">
+        paymoney = #{paymoney,jdbcType=INTEGER},
+      </if>
+      <if test="paystate != null">
+        paystate = #{paystate,jdbcType=INTEGER},
+      </if>
+      <if test="receiveaddress != null">
+        receiveaddress = #{receiveaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="receivername != null">
+        receivername = #{receivername,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverphone != null">
+        receiverphone = #{receiverphone,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.neuedu.print.model.Orders">
+    update orders
+    set orderno = #{orderno,jdbcType=INTEGER},
+      paytime = #{paytime,jdbcType=DATE},
+      paymoney = #{paymoney,jdbcType=INTEGER},
+      paystate = #{paystate,jdbcType=INTEGER},
+      receiveaddress = #{receiveaddress,jdbcType=VARCHAR},
+      receivername = #{receivername,jdbcType=VARCHAR},
+      receiverphone = #{receiverphone,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
